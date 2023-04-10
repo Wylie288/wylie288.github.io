@@ -123,6 +123,7 @@ input, select, textarea {
 
 	strong, b {
 		color: #787878;
+		/*color: #229922*/
 		font-weight: 400;
 	}
 
@@ -135,7 +136,8 @@ input, select, textarea {
 	}
 
 	h1, h2, h3, h4, h5, h6 {
-		color: #787878;
+		/*color: #787878;*/
+		color: #229922;
 		font-weight: 400;
 		line-height: 1em;
 		margin: 0 0 1em 0;
@@ -2592,11 +2594,11 @@ input, select, textarea {
 		-ms-justify-content: space-between;
 		justify-content: space-between;
 		background-color: #1f1815;
-		background-attachment: scroll,								scroll;
+		background-attachment: fixed,								fixed;
 		background-image: url("images/overlay.png"), url("../../images/bg.jpg");
 		background-position: top left,							top left;
 		background-repeat: repeat,								no-repeat;
-		background-size: auto,								150%;
+		background-size: auto,								cover;
 		color: rgba(255, 255, 255, 0.5);
 		height: 100%;
 		left: 0;
