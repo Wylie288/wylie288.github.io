@@ -28,7 +28,7 @@
 							<div class="col-12"><span class="image fit"><img src="starship_captain/starship_captain_cover.png" alt="" /></span></div>
 						</div>
 					</div>
-					<p> <b>Starship Captain</b> is a game about maneuvering your starship to the end of the level. The game features 8 different ships, each wackier and harder to control than the last. Master the gimmick of each ship and reach the docking point without taking damage. On your journey you will experiance moving obstacles, asteroids, gravity, atmosphere, lasers, and electromagnetic fields.</p>
+					<p> <b>Starship Captain</b> is a game about maneuvering your starship to the end of the level. The game features 8 different ships. Each wackier and harder to control than the last. Master the gimmick of each ship and reach the docking point without colliding with obstacles. On your journey you will experiance moving obstacles, asteroids, gravity, atmosphere, lasers, and electromagnetic fields.</p>
 					<h2>Downloads</h2>
 					<ul class="actions">
 						<li><a href="starship_captain/Starship_Captain.exe" class="button primary icon solid fa-download">Windows</a></li>
@@ -44,15 +44,16 @@
 					<p>
 						IDE: Gamemaker <br>
 						Languages: GML, GLSL ES <br>
-						Stage: Shelved Alpha, Polised Demo
+						Stage: Shelved Alpha, Polished Demo
 					</p>
 					<h3>Notable Features</h3>
 					<button class="button collapsible primary icon solid fa-plus">Texture Mask Shader</button>
-					<div class="content"><br>
+					<div class="content" id="imageSet2"><br>
+						<p>This shader applies a texture to the wall objects seamlessly.</p>
 						<h3>Effect Example</h3>
 						<div class="row">								
 							<article class="col-12 col-12-small work-item">
-								<a href="starship_captain/starship_captain_mask.png" class="image fit thumb" text="In editor"><img src="starship_captain/starship_captain_mask.png" alt="" /></a>
+								<a href="starship_captain/starship_captain_mask.png" class="image fit thumb"><img src="starship_captain/starship_captain_mask.png" alt="" /></a>
 								<h3 style="display: none">Texture Masking</h3>
 							</article>					
 						</div>
@@ -87,10 +88,11 @@ void main() {
 }</code></pre>
 					</div>
 					<button class="button collapsible primary icon solid fa-plus">Find Collision Point Algorithm</button>
-					<div class="content"><br>
+					<div class="content" id="imageSet3"><br>
+						<p>Starship Captain has lasers as obstacles. These lasers have a dynamic distance. The following code is responsible for determining the new length of a laser if it has been interupted or if the object it was colliding with has moved.</p>
+						<h3>Effect Example</h3>
 						<article class="col-2 col-2 work-item">
-							<h3>Effect Example</h3>
-							<a href="starship_captain/starship_captain_laser.gif" class="image fit thumb" text="In editor"><img src="starship_captain/starship_captain_laser.gif" alt="" /></a>
+							<a href="starship_captain/starship_captain_laser.gif" class="image fit thumb"><img src="starship_captain/starship_captain_laser.gif" alt="" /></a>
 							<h3 style="display: none">Laser Collision Point Detection</h3>
 						</article>
 						<h3>Code</h3>
@@ -104,22 +106,22 @@ if ((inView = 1){
 	if (endPointCurrent = 0)
 		length = maxLength
 		
-	betweenPoint = collisionLine(sourceX, sourceY, angle, length - 1) // -1 to exclude current collision
+	betweenPoint = scr_collisionLineVector(sourceX, sourceY, angle, length - 1) // -1 to exclude current collision
 	
 	if ((endPointDifference != 0) or (betweenPoint != 0))
-		length = findCollisionPoint(sourceX, sourceY, angle, length)
+		length = scr_findCollisionPoint(sourceX, sourceY, angle, length)
 		
 	endPointOld = endPointCurrent
 }
 	
-///findCollisionPoint(sourceX, sourceY, angle, length)
+///scr_findCollisionPoint(sourceX, sourceY, angle, length)
 var testX = sourceX
 var testY = sourceY
 var lengthX, lengthY
 
 while( abs(length) > 1){
 	length *= 0.5
-	if (collisionLine(testX, testY, angle, length)) = 0{
+	if (scr_collisionLineVector(testX, testY, angle, length)) = 0{
 		lengthX = lengthdir_x(length, angle) //GM way to do sin/cos
 		lengthY = lengthdir_y(length, angle)
 		testX += lengthX
@@ -131,14 +133,71 @@ var newLength = abs(point_distance(sourceX, sourceY, _testX, _testY)) //GM way t
 return newLength</code></pre>
 					</div>
 					<button class="button collapsible primary icon solid fa-plus">Custom Analytics Server</button>
-					<div class="content"><br>
+					<div class="content" id="imageSet4"><br>
+						<p>Starship Captain has an analytics server. The server tracks various metrics and stores leaderboard data. Logs are kept for each day and seperate logs are kept for each user. Obstacle collision coordinates/vectors are stored per incident, per level.</p>
+						<div class="row">
+							<article class="col-6 col-12-xsmall work-item">
+								<h3>Server Console</h3>
+								<a href="starship_captain/starship_captain_log.png" class="image fit thumb" text="In editor"><img src="starship_captain/starship_captain_log.png" alt="" /></a>
+								<h3 style="display: none">Server Console</h3>
+							</article>
+							<article class="col-6 col-12-xsmall test-item">
+								<h3>Data Collected</h3>
+								<ul>
+									<li>Connections</li>
+									<li>Disconnections</li>
+									<li>Usernames</li>
+									<li>Starting level and mode</li>
+									<li>Quiting a level</li>
+									<li>Winning a level, time, and stars</li>
+									<li>Obstacle collision x, y, and ships direction</li>
+								</ul>
+							</article>
+						</div>
+						<h3>Code Example</h3>
+						<pre><code>//scr_incoming
+buffer = argument0
+socket = argument1
+
+buffer_seek(buffer, buffer_seek_start, 0)
+messageId = buffer_read(buffer, buffer_u8)
+switch (messageId)
+{
+	case NAME: scr_name_s(buffer, socket); break;
+	case SENDRECORD: scr_sendrecord(buffer, socket); break;
+	case GETRECORD: scr_getrecord(buffer, socket); break;
+	case GETBOARD: scr_getboard(buffer, socket); break;
+	case WIN: scr_win(buffer, socket); break;
+	case STARLOSS: scr_starloss(buffer, socket); break; 
+	case LEVELLOSS: scr_levelloss(buffer, socket); break;
+	case LEVELSTARTED: scr_levelstart(buffer, socket); break;
+	case LEVELQUIT: scr_levelquit(buffer, socket); break;
+	case VERSION: scr_version(buffer, socket); break;
+}
+
+//scr_starloss (Obstacle Collision)
+buffer = argument0
+socket = argument1
+
+name = buffer_read(buffer, buffer_string)
+zone = buffer_read(buffer, buffer_u8)
+level = buffer_read(buffer, buffer_u8)
+shipX = buffer_read(buffer, buffer_u32)
+shipY = buffer_read(buffer, buffer_u32)
+shipDir = buffer_read(buffer, buffer_u32)
+
+logString = name + " Star X:" + string(shipX) + "  Y:" + string(shipY) + " Dir:" + string(shipDir)
+write_console(logString)
+write_log(logString)
+write_user(logString, name)
+write_starLoss(zone, level, shipX, shipY, shipDir)</code></pre>
 					</div>
 				</section>
 
 			<!-- Three -->
 				<section id="three">
 					<h2>Image Gallery</h2>
-					<div class="row">
+					<div class="row" id="imageSet1">
 						<article class="col-6 col-12-xsmall work-item">
 							<a href="starship_captain/starship_captain_1.png" class="image fit thumb"><img src="starship_captain/starship_captain_1.png" alt="" /></a>
 							<h3 style="display: none">Image 1</h3>
@@ -162,7 +221,9 @@ return newLength</code></pre>
 				<section id="four">
 					<h2>What I learned</h2>
 					<h3>Lessons</h3>
+						<p>When working on Starship Captain I learned about fragment and vertex shaders. Fragment shaders are used to apply a background blur affect and fragment shaders are used to apply a texture mask to walls. I was also able to apply optimization techniques I learned in Data Structures and Algorithms. I modified the laser collision point algorthim from doing N point collision calls to Log(N) line collision calls. (N being the max distance of the laser). This project also prompted the use out using custom tools. Particularly for altering UI placement during runtime. A level editor to speed up development was also in the works. The final thing I learned when working on this project was how to make an analytics server through gamemaker.</p>
 					<h3>Mistakes</h3>
+						<p>The main mistake that plagued this project was a lack of version control. Its riddled with objects and code that are no longer used. Such things should exist soley in old versions of the project and not in the most recent.</p>
 				</section>
 			</div>
 		</body>
@@ -188,50 +249,4 @@ return newLength</code></pre>
 			<script src="assets/js/breakpoints.min.js"></script>
 			<script src="assets/js/util.js"></script>
 			<script src="assets/js/main.js"></script>
-			<style>
-			.content {
-				padding: 0 18px;
-				background-color: #f5f5f5;
-				max-height: 0;
-				overflow: hidden;
-				transition: max-height 0.2s ease-out;
-				border-radius: 0.35em;
-				border: solid 2px;
-				border-color: transparent;
-			  }
-			  .collapsible{
-				  min-width: 100%;
-				  max-height: 2.5em;
-				  padding-top: 0em;
-				  line-height: 1.75em;
-				  font-size: 0.9em;
-				  text-align: left;
-			  }
-			  .feature{
-				  padding-bottom: 0em;
-				  margin: 0 0 0.1em 0;
-			  }
-			</style>
-				<script>
-				var coll = document.getElementsByClassName("collapsible");
-				var i;
-				
-				for (i = 0; i < coll.length; i++) {
-				  coll[i].addEventListener("click", function() {
-					this.classList.toggle("active");
-					var content = this.nextElementSibling;
-					
-					if (content.style.maxHeight){
-					  content.style.maxHeight = null;
-					  this.className = "button collapsible primary icon solid fa-plus";
-					  content.style.borderColor = "transparent";
-					} else {
-					  content.style.maxHeight = content.scrollHeight + "px";
-					  this.className = "button collapsible primary icon solid fa-minus";
-					  content.style.borderColor = "#efefef";
-					}
-				  });
-				}
-				</script>
-
 </html>

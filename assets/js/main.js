@@ -98,7 +98,59 @@
 		// Lightbox gallery.
 			$window.on('load', function() {
 
-				$('#two').poptrox({
+				$('#imageSet1').poptrox({
+					caption: function($a) { return $a.next('h3').text(); },
+					overlayColor: '#2c2c2c',
+					overlayOpacity: 0.85,
+					popupCloserText: '',
+					popupLoaderText: '',
+					selector: '.work-item a.image',
+					usePopupCaption: true,
+					usePopupDefaultStyling: false,
+					usePopupEasyClose: false,
+					usePopupNav: true,
+					windowMargin: (breakpoints.active('<=small') ? 0 : 50)
+				});
+				$('#imageSet2').poptrox({
+					caption: function($a) { return $a.next('h3').text(); },
+					overlayColor: '#2c2c2c',
+					overlayOpacity: 0.85,
+					popupCloserText: '',
+					popupLoaderText: '',
+					selector: '.work-item a.image',
+					usePopupCaption: true,
+					usePopupDefaultStyling: false,
+					usePopupEasyClose: false,
+					usePopupNav: true,
+					windowMargin: (breakpoints.active('<=small') ? 0 : 50)
+				});
+				$('#imageSet3').poptrox({
+					caption: function($a) { return $a.next('h3').text(); },
+					overlayColor: '#2c2c2c',
+					overlayOpacity: 0.85,
+					popupCloserText: '',
+					popupLoaderText: '',
+					selector: '.work-item a.image',
+					usePopupCaption: true,
+					usePopupDefaultStyling: false,
+					usePopupEasyClose: false,
+					usePopupNav: true,
+					windowMargin: (breakpoints.active('<=small') ? 0 : 50)
+				});
+				$('#imageSet4').poptrox({
+					caption: function($a) { return $a.next('h3').text(); },
+					overlayColor: '#2c2c2c',
+					overlayOpacity: 0.85,
+					popupCloserText: '',
+					popupLoaderText: '',
+					selector: '.work-item a.image',
+					usePopupCaption: true,
+					usePopupDefaultStyling: false,
+					usePopupEasyClose: false,
+					usePopupNav: true,
+					windowMargin: (breakpoints.active('<=small') ? 0 : 50)
+				});
+				$('#imageSet5').poptrox({
 					caption: function($a) { return $a.next('h3').text(); },
 					overlayColor: '#2c2c2c',
 					overlayOpacity: 0.85,
@@ -115,3 +167,24 @@
 			});
 
 })(jQuery);
+
+//Collapsible
+var coll = document.getElementsByClassName("collapsible");
+				var i;
+				
+				for (i = 0; i < coll.length; i++) {
+				  coll[i].addEventListener("click", function() {
+					this.classList.toggle("active");
+					var content = this.nextElementSibling;
+					
+					if (content.style.maxHeight){
+					  content.style.maxHeight = null;
+					  this.className = "button collapsible primary icon solid fa-plus";
+					  content.style.borderColor = "transparent";
+					} else {
+					  content.style.maxHeight = content.scrollHeight + "px";
+					  this.className = "button collapsible primary icon solid fa-minus";
+					  content.style.borderColor = "#efefef";
+					}
+				  });
+				}
