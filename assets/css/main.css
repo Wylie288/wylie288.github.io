@@ -72,6 +72,25 @@ input, select, textarea {
 	appearance: none;
 }
 
+.content {
+	padding: 0 18px;
+	background-color: white;
+	max-height: 0;
+	overflow: hidden;
+	transition: max-height 0.2s ease-out;
+  }
+  .collapsible{
+	  min-width: 100%;
+	  max-height: 2em;
+	  padding-top: 0em;
+	  line-height: 1.75em;
+	  text-align: left;
+  }
+  .feature{
+	  padding-bottom: 0em;
+	  margin: 0 0 0.1em 0;
+  }
+
 /* Basic */
 
 	html {
@@ -225,10 +244,13 @@ input, select, textarea {
 	}
 
 		pre code {
+			max-height: 31em;
 			display: block;
 			line-height: 1.75em;
 			padding: 1em 1.5em;
+			overflow-y: auto;
 			overflow-x: auto;
+			tab-size: 4;
 		}
 
 	.align-left {
@@ -2507,6 +2529,14 @@ input, select, textarea {
 		.button.small {
 			font-size: 0.8em;
 		}
+		.button.xsmall {
+			font-size: 0.8em;
+			height: 1em;
+			height: calc(1.75em + 6px);
+			line-height: 1.75em;
+			min-width: 5em;
+			padding: 0em;
+		}
 
 		input[type="submit"].large,
 		input[type="reset"].large,
@@ -2528,7 +2558,7 @@ input, select, textarea {
 			input[type="reset"].primary:hover,
 			input[type="button"].primary:hover,
 			.button.primary:hover {
-				background-color: #5cc6a7;
+				background-color: #5cc6a7;/*#5cc6a7;*/
 				border-color: #5cc6a7;
 			}
 
@@ -2536,8 +2566,8 @@ input, select, textarea {
 			input[type="reset"].primary:active,
 			input[type="button"].primary:active,
 			.button.primary:active {
-				background-color: #3eb08f;
-				border-color: #3eb08f;
+				background-color: #5cc6a7;
+				border-color: #5cc6a7;
 			}
 
 		input[type="submit"].disabled, input[type="submit"]:disabled,
@@ -2573,6 +2603,27 @@ input, select, textarea {
 			line-height: 1.5em;
 			margin: 0;
 		}
+
+/* Work link */
+
+.work-link {
+	margin: 0 0 2em 0;
+}
+
+	.work-link .image {
+		margin: 0 0 1.5em 0;
+	}
+
+	.work-link h3 {
+		font-size: 1em;
+		margin: 0 0 0.5em 0;
+	}
+
+	.work-link p {
+		font-size: 0.8em;
+		line-height: 1.5em;
+		margin: 0;
+	}
 
 /* Header */
 
