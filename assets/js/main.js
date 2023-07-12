@@ -170,21 +170,39 @@
 
 //Collapsible
 var coll = document.getElementsByClassName("collapsible");
-				var i;
-				
-				for (i = 0; i < coll.length; i++) {
-				  coll[i].addEventListener("click", function() {
-					this.classList.toggle("active");
-					var content = this.nextElementSibling;
-					
-					if (content.style.maxHeight){
-					  content.style.maxHeight = null;
-					  this.className = "button collapsible primary icon solid fa-plus";
-					  content.style.borderColor = "transparent";
-					} else {
-					  content.style.maxHeight = content.scrollHeight + "px";
-					  this.className = "button collapsible primary icon solid fa-minus";
-					  content.style.borderColor = "#efefef";
-					}
-				  });
-				}
+var i;
+
+for (i = 0; i < coll.length; i++) {
+	coll[i].addEventListener("click", function() {
+	this.classList.toggle("active");
+	var content = this.nextElementSibling;
+	
+	if (content.style.maxHeight){
+		content.style.maxHeight = null;
+		this.className = "button collapsible primary icon solid fa-plus";
+		content.style.borderColor = "transparent";
+	} else {
+		content.style.maxHeight = content.scrollHeight + "px";
+		this.className = "button collapsible primary icon solid fa-minus";
+		content.style.borderColor = "#efefef";
+	}
+	});
+}
+
+//Scroll to Top
+$(document).ready(function(){
+	var btn = $('#backToTop');
+	$(window).on('scroll', function() {
+		if ($(window).scrollTop() > 300) {
+			btn.addClass('show');
+		} else {
+			btn.removeClass('show');
+		}
+	});
+	btn.on('click', function(e) {
+		e.preventDefault();
+		$('html, body').animate({
+			scrollTop: 0
+		}, '300');
+	});
+});
