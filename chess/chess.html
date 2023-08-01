@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 	<head>
-		<title>Name</title>
+		<title>Ultimate Chess</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="../assets/css/main.css" />
@@ -28,7 +28,7 @@
 							<div class="col-12"><span class="image fit"><img src="main.png" alt="" /></span></div>
 						</div>
 					</div>
-					<p> <b>Ultimate Chess</b> is an new take on chess. Featuring new pieces, a larger board, and the ability to place your own pieces before the match starts</p>
+					<p> <b>Ultimate Chess</b> is an new take on chess. Featuring new pieces, a larger board, and the ability to place your own pieces before the match starts. This was my first group SE project. Given my game development experiance I acted as team lead on this project. I created the grid, board manager, and the parent piece object.</p>
 					<h2>Downloads</h2>
 					<ul class="actions">
 						<li><a href="starship_captain/Starship_Captain.exe" class="button primary icon solid fa-download">Windows</a></li>
@@ -46,27 +46,176 @@
 						<b>Languages: C#</b> <br>
 						<b>Stage: Final</b>
 					</p>
-					<h3>Notable Features</h3>
+					<h3>List of Features</h3>
 					<p>
-						<li>Before the match starts players place their pieces until they reach a maximum value</li>
-						<li>When selecting a piece to move the game shows you valid positions as well as what opponents pieces it can take</li>
-						<li>check detection</li>
+						<li>Before the match starts players place their pieces until they reach a maximum value of total pieces</li>
+						<li>When selecting a piece the game shows you what spaces it can move to as well as any pieces it can take</li>
+						<li>Check detection</li>
 						<li>The game manages turn order</li>
 						<li>Save game/Load game system</li>
-						<li>A system designed for quickly adding new pieces and defining their behaviour</li>
+						<li>OO principles are used to allow quick addition/modification of piece behavior</li>
 					</p>
+					<button class="button collapsible primary icon solid fa-plus">Board Manager</button>
+					<div class="content" id="imageSet2"><br>
+					<p>The bulk of the game exists in the board manager class. It is responsible for tracking who's turn it, what pieces are where, and if the king is in check. The latter data is stored as part of a 3D array. The first two dimensions are x and y positions of the board. The 3rd dimension has 2 layers. Piece type and piece color. The bottom left of the grid rests at (0,0,0). When the player clicks on the screen it sends a raycast towards the grid and returns the cooridnates of the collision. These values are divided by the size of each grid space then rounded down. The board manager then checks to see what piece is in that position and proceeds accordingly.</p>
+					</div>
 					<button class="button collapsible primary icon solid fa-plus">Piece Definition</button>
 					<div class="content" id="imageSet2"><br>
-					</div>
+					<p>To define movement behaviour the CreateMarker method is called for each space that piece can move to. The method has 3 arguments. Relative X position, Relative Y position, and Type. The type has 3 states. 2 is the most common. This is used for any space a piece can move to, and take at. The others are primarly used for pawns. 0 is used for any space a piece can move to, but cannot take at. 1 is used for a space a piece can ONLY take at, but not normally move to.</p>
+					<h3>Example Piece Definitions</h3>
+					<pre><code>public class King : Piece  {
+	public override void Movement() {
+		base.CreateMarker(0, 1, 2);
+		base.CreateMarker(0, -1, 2);
+		base.CreateMarker(1, 0, 2);
+		base.CreateMarker(-1, 0, 2);
+		base.CreateMarker(1, 1, 2);
+		base.CreateMarker(1, -1, 2);
+		base.CreateMarker(-1, 1, 2);
+		base.CreateMarker(-1, -1, 2);
+	}
+}
+public class Pawn : Piece {
+	public override void Movement() {
+		if(color == 0) {
+			base.CreateMarker(0, 1, 0);
+			base.CreateMarker(-1, 1, 1);
+			base.CreateMarker(1, 1, 1);
+		}
+		//Snip//
+	}
+}
+
+public class Rook : Piece {
+	public override void Movement() {
+		int i = 1;
+		int stopped = 0;
+		while (stopped==0) { //up
+			base.CreateMarker(0, i, 2);
+			//If next is out of bounds, or colliding with another piece
+			if (y + i >= 9) or (GameObject.FindWithTag("Grid").GetComponent<BoardManager>().boardState[x, y + i, 0] != 0)
+				stopped = 1;
+			i++;     
+		}
+		//Snip//
+	}
+}</code></pre>
+				</div>
 				</section>
 			
 			<!-- Three -->
 				<section id="three">
 					<h2>What I learned</h2>
-						<p>This project offered a few new experiances. Ultimate Chess was the first time I used unity or C# beyond following a simple youtube tutorial. Ultimate Chess was also the first time I worked with others on a project's code base. The most important lesson I learned with this project was what coding paradigms were. The CS class I had taken this semester taught us C++ and functional design. I laid the groundwork for this project using functional design under the assumption the object oriented paradigm I have been using in Gamemaker was seen as "the easy/unproffesional way". It wasn't until a senior had noticed and asked why we weren't taking better advantage of C#s inheritence that I learned about the concept of paradigms.</p>
-						<p>This project is also a good example of how my code was evolved. The following are examples of code used to display where a piece can move after being clicked on</p>
-						<h3>Taken From Project:</h3>
-						<h3>Rewritten based on lessons learned since:</h3>
+					<p>This project offered a few new experiances. Ultimate Chess was the first time I used unity or C# beyond following a simple youtube tutorial. Ultimate Chess was also the first time I worked with others on a project's code base. The most important lesson I learned with this project were coding paradigms. The CS class I had taken this semester taught us C++ and functional design. I laid the groundwork for this project using functional design under the incorrect assumption the object oriented way of coding I had been used to was "bad". It wasn't until a senior had noticed and asked why we weren't taking better advantage of C#s inheritence that I learned about the concept of paradigms. The pieces themselves were refactored but the board manager is still almost entirely functional</p>
+					<p>This project is also a good example of how my code has evolved. The following are examples of code used to display where a piece can move after being clicked on</p>
+					<button class="button collapsible primary icon solid fa-plus">Code From Past:</button>
+					<div class="content" id="imageSet2"><br>
+					<pre><code>public class Piece : MonoBehaviour
+{
+	//Snip//
+	public void OnMouseDown()
+	{
+		//Snip//
+	}
+
+	//Snip//
+
+	public void CreateMarker (int rx, int ry, int type)
+	{
+		if ((x + rx >= 0) && (x + rx <= 9) && (y + ry >= 0) && (y + ry <= 9)) //If not out of bounds
+		{
+			if (GameObject.FindWithTag("Grid").GetComponent<BoardManager>().gameState - 2 == color)
+			{  // Same color
+				bool empty = false;
+				if (GameObject.FindWithTag("Grid").GetComponent<BoardManager>().boardState[x + rx, y + ry, 0] == 0)
+					empty = true;
+				bool opponent = false;
+				if (GameObject.FindWithTag("Grid").GetComponent<BoardManager>().boardState[x + rx, y + ry, 1] != color)
+					opponent = true;
+
+				//Move Only
+				if ((type == 0) && (empty == true))
+					InstantiateMarker(rx, ry, type);
+				//Take Only
+				if ((type == 1) && (empty == false) && (opponent == true))
+					InstantiateMarker(rx, ry, type);
+				//Move/Take
+				if ((type == 2) && ((empty == true) || (opponent == true)))
+					InstantiateMarker(rx, ry, type);
+			}
+			else // Different color
+			{
+				if ((GameObject.FindWithTag("Grid").GetComponent<BoardManager>().boardState[x + rx, y + ry, 1] != color) && (GameObject.FindWithTag("Grid").GetComponent<BoardManager>().boardState[x + rx, y + ry, 0] == 1) && (type > 0))
+				{
+					GameObject.FindWithTag("Grid").GetComponent<BoardManager>().check = true;
+				}
+			}
+		}
+	}
+
+	public void InstantiateMarker(int rx, int ry, int type)
+	{
+		//Snip//
+	}
+		
+	public virtual void Movement ()
+	{
+		//Snip//
+	}
+}</code></pre>
+					</div>
+					<button class="button collapsible primary icon solid fa-plus">Rewritten:</button>
+					<div class="content" id="imageSet2"><br>
+						<pre><code>public class Piece : MonoBehaviour {
+	//Snip//
+	public const int MOVE = 0;
+	public const int TAKE = 1;
+	public const int MOVETAKE = 2;
+	public const int KING = 1;
+
+	public void OnMouseDown() {
+		//Snip//
+	}
+	//Snip//
+	public void CreateMarker (int relativeX, int relativeY, int type) {
+		BoardManager boardManager = GameObject.FindWithTag("Grid").GetComponent<BoardManager>();
+		Vector2Int position = new Vector2Int(x + relativeX, y + relativeY);
+		if (isInBounds(position)) {      
+			if (boardManager.getActivePlayer() == color) {                
+				if ((type == MOVE)      && (IsEmpty(position)))
+					InstantiateMarkerMove(position);
+				if ((type == TAKE)     && (!IsEmpty(position)) && (IsOpponent(position)))
+					InstantiateMarkerTake(position);
+				if ((type == MOVETAKE) && ((IsEmpty(position)) || (IsOpponent(position))))
+					InstantiateMarkerTake(position);
+			}
+			else if ((type > MOVE) && (IsOpponent(position)) && (boardManager.GetPieceAt(position) == KING))
+				boardManager.check = true;
+		}
+	}
+	public void InstantiateMarkerMove(Vector2Int position) {
+		//Snip//
+	}
+	public void InstantiateMarkerTake(Vector2Int position) {
+		//Snip//
+	}
+		
+	public virtual void Movement () {
+	}
+
+	bool IsInBounds(Vector2Int position) {
+		if ((position.x >= 0) && (position.x <= 9) && (position.y >= 0) && (position.y <= 9)); return true; else return false;
+	}
+
+	bool IsEmpty(Vector2Int position) {
+		if (boardManager.GetPieceAt(position) == 0); return true; else return false;
+	}
+
+	bool IsOpponent(Vector2Int position) {
+		if (boardManager.GetColorAt(position) != color); return true; else return false;
+	}
+}</code></pre>
+					</div>
 			</section>
 
 			<!-- four -->
