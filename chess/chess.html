@@ -56,7 +56,7 @@
 					</p>
 					<button class="button collapsible primary icon solid fa-plus">Board Manager</button>
 					<div class="content" id="imageSet2"><br>
-					<p>The bulk of the game exists in the board manager class. It is responsible for tracking who's turn it, what pieces are where, and if the king is in check. The latter data is stored as part of a 3D array. The first two dimensions are x and y positions of the board. The 3rd dimension has 2 layers. Piece type and piece color. The bottom left of the grid rests at (0,0,0). When the player clicks on the screen it sends a raycast towards the grid and returns the cooridnates of the collision. These values are divided by the size of each grid space then rounded down. The board manager then checks to see what piece is in that position and proceeds accordingly.</p>
+					<p>The bulk of the game exists in the board manager class. It is responsible for tracking who's turn it is, location of the pieces, and if the king is in check. The latter data is stored as part of a 3D array. The first two dimensions are x and y positions of the board. The 3rd dimension has 2 layers. Piece type and piece color. The bottom left of the grid rests at (0,0,0). When the player clicks on the screen it sends a raycast towards the grid and returns the cooridnates of the collision. These values are divided by the size of each grid space then rounded down. The board manager then checks to see what piece is in that position and proceeds accordingly.</p>
 					</div>
 					<button class="button collapsible primary icon solid fa-plus">Piece Definition</button>
 					<div class="content" id="imageSet2"><br>
@@ -105,9 +105,9 @@ public class Rook : Piece {
 			<!-- Three -->
 				<section id="three">
 					<h2>What I learned</h2>
-					<p>This project offered a few new experiences. Ultimate Chess was the first time I used unity or C# beyond following a simple youtube tutorial. Ultimate Chess was also the first time I worked with others on a project's code base. The most important lesson I learned with this project were coding paradigms. The CS class I had taken this semester taught us C++ and functional design. I laid the groundwork for this project using functional design under the incorrect assumption the object oriented way of coding I had been used to was "bad". It wasn't until a senior had noticed and asked why we weren't taking better advantage of C#s inheritence that I learned about the concept of paradigms. The pieces themselves were refactored but the board manager is still almost entirely functional</p>
-					<p>This project is also a good example of how my code has evolved. The following are examples of code used to display where a piece can move after being clicked on</p>
-					<button class="button collapsible primary icon solid fa-plus">Code From Past:</button>
+					<p>This project offered a few new experiences. Ultimate Chess was the first time I used unity or C# beyond following a simple youtube tutorial. Ultimate Chess was also the first time I worked with others on a project's code base. The most important lesson I learned with this project were coding paradigms. The CS class I had taken this semester taught us C++ and functional design. I groundwork of this project was laid using functional design, as I had learned. When a more experianced student had asked why we weren't taking better advantage of the object-oriented nature of Unity I learned about design paradigms. The pieces themselves were refactored but the board manager is still almost entirely functional</p>
+					<p>This project is also a good example of how my code has evolved over the years. The following are examples of code used to display where a piece can move after being clicked on</p>
+					<button class="button collapsible primary icon solid fa-plus">Code as present in the project:</button>
 					<div class="content" id="imageSet2"><br>
 					<pre><code>public class Piece : MonoBehaviour
 {
@@ -163,25 +163,25 @@ public class Rook : Piece {
 	}
 }</code></pre>
 					</div>
-					<button class="button collapsible primary icon solid fa-plus">Rewritten:</button>
+					<button class="button collapsible primary icon solid fa-plus">Rewritten :</button>
 					<div class="content" id="imageSet2"><br>
 						<pre><code>public class Piece : MonoBehaviour {
 	//Snip//
-	public const int MOVE = 0;
-	public const int TAKE = 1;
-	public const int MOVETAKE = 2;
-	public const int KING = 1;
+	const int MOVE = 0;
+	const int TAKE = 1;
+	const int MOVETAKE = 2;
+	const int KING = 1; { get; private set; }
 
-	public void OnMouseDown() {
+	void OnMouseDown() {
 		//Snip//
 	}
 	//Snip//
-	public void CreateMarker (int relativeX, int relativeY, int type) {
+	void CreateMarker (int relativeX, int relativeY, int type) {
 		BoardManager boardManager = GameObject.FindWithTag("Grid").GetComponent<BoardManager>();
 		Vector2Int position = new Vector2Int(x + relativeX, y + relativeY);
 		if (isInBounds(position)) {      
 			if (boardManager.getActivePlayer() == color) {                
-				if ((type == MOVE)      && (IsEmpty(position)))
+				if ((type == MOVE)     && (IsEmpty(position)))
 					InstantiateMarkerMove(position);
 				if ((type == TAKE)     && (!IsEmpty(position)) && (IsOpponent(position)))
 					InstantiateMarkerTake(position);
@@ -192,14 +192,16 @@ public class Rook : Piece {
 				boardManager.check = true;
 		}
 	}
-	public void InstantiateMarkerMove(Vector2Int position) {
+
+	virtual void Movement () {
+	}
+
+	void InstantiateMarkerMove(Vector2Int position) {
 		//Snip//
 	}
-	public void InstantiateMarkerTake(Vector2Int position) {
+
+	void InstantiateMarkerTake(Vector2Int position) {
 		//Snip//
-	}
-		
-	public virtual void Movement () {
 	}
 
 	bool IsInBounds(Vector2Int position) {
